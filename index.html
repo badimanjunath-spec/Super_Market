@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang=\"en\">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>Smart Checkout – Barcode Scanner</title>
+  <meta charset=\"utf-8\" />
+  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1\" />
+  <title>Smart Checkout – Supermarket Scanner + Inventory</title>
   <style>
     :root {
       --bg: #0f1221;
@@ -22,7 +22,7 @@
     html, body { height: 100%; }
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, \"Noto Sans\", \"Liberation Sans\", sans-serif;
       background: linear-gradient(160deg, #0b1020 0%, #121430 50%, #141832 100%);
       color: var(--text);
     }
@@ -32,51 +32,36 @@
       backdrop-filter: blur(8px);
       border-bottom: 1px solid var(--border);
     }
-    .wrap { max-width: 1100px; margin: 0 auto; padding: 1rem; }
-    .title {
-      display: flex; align-items: center; gap: .75rem;
-      font-weight: 700; letter-spacing: .2px; font-size: 1.1rem;
-    }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 1rem; }
+    .title { display: flex; align-items: center; gap: .75rem; font-weight: 700; letter-spacing: .2px; font-size: 1.1rem; }
     .logo { width: 28px; height: 28px; }
-    .grid {
-      display: grid; gap: 1rem; grid-template-columns: 1fr; padding: 1rem; 
-    }
-    @media (min-width: 900px) {
-      .grid { grid-template-columns: 1.2fr 1fr; }
-    }
+    .grid { display: grid; gap: 1rem; grid-template-columns: 1fr; padding: 1rem; }
+    @media (min-width: 1024px) { .grid { grid-template-columns: 1.3fr 1fr; } }
     .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 6px 18px var(--shadow); overflow: hidden; }
     .card h2 { margin: 0; padding: 1rem 1rem .5rem; font-size: 1rem; font-weight: 700; }
     .card .body { padding: 1rem; }
 
     /* Buttons */
-    .btn { 
-      appearance: none; border: 1px solid var(--border); color: var(--text);
-      background: #1b1f33; padding: .7rem .9rem; border-radius: 10px; cursor: pointer;
-      display: inline-flex; align-items: center; gap: .5rem; font-weight: 600; transition: transform .08s ease, background .25s ease, border-color .25s ease, box-shadow .25s ease;
-    }
+    .btn { appearance: none; border: 1px solid var(--border); color: var(--text); background: #1b1f33; padding: .7rem .9rem; border-radius: 10px; cursor: pointer; display: inline-flex; align-items: center; gap: .5rem; font-weight: 600; transition: transform .08s ease, background .25s ease, border-color .25s ease, box-shadow .25s ease; }
     .btn:hover { transform: translateY(-1px); border-color: #3b3f57; }
     .btn:active { transform: translateY(0); }
     .btn.primary { background: linear-gradient(180deg, #2b314d, #1b2038); border-color: #3b3f57; }
     .btn.accent { background: linear-gradient(90deg, #22c55e, #06b6d4); color: #071013; border: none; }
     .btn.warn { background: #3a2a12; border-color: #5f420f; color: #fcd34d; }
     .btn.danger { background: #2b1414; border-color: #602727; color: #fecaca; }
+    .btn.success { background: #0f2a19; border-color: #1c5b35; color: #a7f3d0; }
     .btn.small { padding: .45rem .6rem; font-size: .9rem; }
 
     /* Inputs */
     .field { display: flex; gap: .5rem; flex-wrap: wrap; }
     .field label { flex: 1 1 150px; }
-    .input { 
-      width: 100%; background: #12162a; border: 1px solid var(--border); color: var(--text); 
-      padding: .7rem .75rem; border-radius: 10px; outline: none; transition: border-color .2s ease, box-shadow .2s ease;
-    }
+    .input { width: 100%; background: #12162a; border: 1px solid var(--border); color: var(--text); padding: .7rem .75rem; border-radius: 10px; outline: none; transition: border-color .2s ease, box-shadow .2s ease; }
     .input:focus { border-color: #54608a; box-shadow: 0 0 0 3px rgba(84,96,138,.25); }
     .radio-row { display: flex; gap: .75rem; flex-wrap: wrap; }
     .radio-row label { display: inline-flex; align-items: center; gap: .5rem; background: #12162a; border: 1px solid var(--border); padding: .5rem .75rem; border-radius: 10px; cursor: pointer; }
 
     /* Scanner */
-    .scanner {
-      position: relative; border-radius: 12px; overflow: hidden; background: #0d1124; border: 1px dashed #3b3f57; min-height: 240px;
-    }
+    .scanner { position: relative; border-radius: 12px; overflow: hidden; background: #0d1124; border: 1px dashed #3b3f57; min-height: 240px; }
     video { width: 100%; height: auto; display: block; background: #000; }
     canvas { display: none; }
     .overlay { position: absolute; inset: 0; pointer-events: none; }
@@ -84,7 +69,7 @@
     .scanline { position: absolute; left: 12%; right: 12%; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); animation: sweep 2.2s ease-in-out infinite; }
     @keyframes sweep { 0% { top: 22%; } 50% { top: 78%; } 100% { top: 22%; } }
 
-    /* Items */
+    /* Items (Cart) */
     .items { display: grid; gap: .75rem; }
     .item { display: grid; grid-template-columns: 1fr auto auto auto; gap: .5rem; align-items: center; background: #12162a; border: 1px solid var(--border); border-radius: 10px; padding: .6rem .7rem; animation: pop .2s ease; }
     .item .code { color: var(--muted); font-size: .85rem; }
@@ -92,12 +77,15 @@
     .qty { display: inline-flex; align-items: center; gap: .35rem; }
     .qty .btn { padding: .3rem .55rem; }
     @keyframes pop { from { transform: scale(.98); opacity: .5; } to { transform: scale(1); opacity: 1; } }
-
     .empty { color: var(--muted); text-align: center; padding: 1rem; border: 1px dashed var(--border); border-radius: 10px; }
 
-    /* Totals */
-    .totals { display: grid; grid-template-columns: 1fr auto; gap: .5rem; align-items: center; padding-top: .4rem; border-top: 1px solid var(--border); }
-    .totals .label { color: var(--muted); }
+    /* Inventory */
+    .inv-top { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+    .inv-list { display: grid; gap: .6rem; margin-top: .6rem; }
+    .inv-item { display: grid; grid-template-columns: 1.4fr .8fr .6fr auto; gap: .5rem; align-items: center; background: #12162a; border: 1px solid var(--border); border-radius: 10px; padding: .55rem .6rem; }
+    .inv-item .code { color: var(--muted); font-size: .85rem; }
+    .pill { display:inline-flex; align-items:center; gap:.4rem; background:#12162a; border:1px solid var(--border); padding:.4rem .6rem; border-radius:999px; }
+    .pill .dot { width:8px; height:8px; border-radius:999px; background: var(--accent); }
     .hr { height: 1px; background: var(--border); margin: .75rem 0; }
 
     /* Toast */
@@ -107,163 +95,218 @@
 </head>
 <body>
   <header>
-    <div class="wrap title">
-      <svg class="logo" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="3" y="5" width="3" height="14" rx="1" fill="#6ee7b7"/>
-        <rect x="8" y="5" width="2" height="14" rx="1" fill="#8b5cf6"/>
-        <rect x="12" y="5" width="3" height="14" rx="1" fill="#6ee7b7"/>
-        <rect x="17" y="5" width="2" height="14" rx="1" fill="#8b5cf6"/>
+    <div class=\"wrap title\">
+      <svg class=\"logo\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">
+        <rect x=\"3\" y=\"5\" width=\"3\" height=\"14\" rx=\"1\" fill=\"#6ee7b7\"/>
+        <rect x=\"8\" y=\"5\" width=\"2\" height=\"14\" rx=\"1\" fill=\"#8b5cf6\"/>
+        <rect x=\"12\" y=\"5\" width=\"3\" height=\"14\" rx=\"1\" fill=\"#6ee7b7\"/>
+        <rect x=\"17\" y=\"5\" width=\"2\" height=\"14\" rx=\"1\" fill=\"#8b5cf6\"/>
       </svg>
       <div>Smart Checkout</div>
     </div>
   </header>
 
-  <main class="wrap">
-    <div class="grid">
-      <!-- Scanner & Manual Add -->
-      <section class="card">
+  <main class=\"wrap\">
+    <div class=\"grid\">
+      <!-- Scanner & Mode -->
+      <section class=\"card\">
         <h2>Scan items (mobile-ready)</h2>
-        <div class="body">
-          <div class="scanner" id="scanner">
-            <video id="video" playsinline muted></video>
-            <canvas id="canvas"></canvas>
-            <div class="overlay">
-              <div class="guide"></div>
-              <div class="scanline"></div>
+        <div class=\"body\">
+          <div class=\"inv-top\">
+            <div class=\"pill\" title=\"Choose what scanning should do\">
+              <span class=\"dot\"></span>
+              <strong>Scan mode</strong>
             </div>
-          </div>
-          <div style="display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.7rem;">
-            <button class="btn accent" id="startBtn">Start Scanner</button>
-            <button class="btn" id="stopBtn">Stop</button>
-            <button class="btn" id="torchBtn" title="Toggle flash (if supported)">Toggle Torch</button>
-            <button class="btn" id="switchCamBtn" title="Switch camera">Switch Camera</button>
+            <div class=\"radio-row\">
+              <label><input type=\"radio\" name=\"mode\" value=\"cart\" checked /> Cart</label>
+              <label><input type=\"radio\" name=\"mode\" value=\"inventory\" /> Inventory</label>
+            </div>
           </div>
 
-          <div class="hr"></div>
-          <h2>Add manually</h2>
-          <div class="body" style="padding-top:0;">
-            <div class="field">
+          <div class=\"scanner\" id=\"scanner\">
+            <video id=\"video\" playsinline muted></video>
+            <canvas id=\"canvas\"></canvas>
+            <div class=\"overlay\">
+              <div class=\"guide\"></div>
+              <div class=\"scanline\"></div>
+            </div>
+          </div>
+          <div style=\"display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.7rem;\">
+            <button class=\"btn accent\" id=\"startBtn\">Start Scanner</button>
+            <button class=\"btn\" id=\"stopBtn\">Stop</button>
+            <button class=\"btn\" id=\"torchBtn\" title=\"Toggle flash (if supported)\">Toggle Torch</button>
+            <button class=\"btn\" id=\"switchCamBtn\" title=\"Switch camera\">Switch Camera</button>
+          </div>
+
+          <div class=\"hr\"></div>
+          <h2>Add manually (to cart)</h2>
+          <div class=\"body\" style=\"padding-top:0;\">
+            <div class=\"field\">
               <label>
-                <div class="label">Barcode / Code</div>
-                <input id="codeInput" class="input" placeholder="e.g., 8901234567890" />
+                <div class=\"label\">Barcode / Code</div>
+                <input id=\"codeInput\" class=\"input\" placeholder=\"e.g., 8901234567890\" />
               </label>
               <label>
-                <div class="label">Item name</div>
-                <input id="nameInput" class="input" placeholder="e.g., Dairy Milk 52g" />
+                <div class=\"label\">Item name</div>
+                <input id=\"nameInput\" class=\"input\" placeholder=\"e.g., Dairy Milk 52g\" />
               </label>
               <label>
-                <div class="label">Price (₹)</div>
-                <input id="priceInput" class="input" type="number" min="0" step="0.01" placeholder="e.g., 45" />
+                <div class=\"label\">Price (₹)</div>
+                <input id=\"priceInput\" class=\"input\" type=\"number\" min=\"0\" step=\"0.01\" placeholder=\"e.g., 45\" />
               </label>
             </div>
-            <div style="margin-top:.5rem; display:flex; gap:.5rem;">
-              <button class="btn primary" id="addManualBtn">Add item</button>
-              <button class="btn" id="clearInputsBtn">Clear</button>
+            <div style=\"margin-top:.5rem; display:flex; gap:.5rem;\">
+              <button class=\"btn primary\" id=\"addManualBtn\">Add item to cart</button>
+              <button class=\"btn\" id=\"clearInputsBtn\">Clear</button>
             </div>
           </div>
         </div>
       </section>
 
       <!-- Cart & Checkout -->
-      <section class="card">
-        <h2>Your items</h2>
-        <div class="body">
-          <div id="items" class="items"></div>
-          <div id="emptyState" class="empty">No items yet. Scan a barcode or add manually.</div>
-          <div class="hr"></div>
-          <div class="totals">
-            <div class="label">Subtotal</div>
-            <div id="subtotal">₹0.00</div>
-            <div class="label">Tax (0%)</div>
-            <div id="tax">₹0.00</div>
-            <div class="label" style="font-weight:700;">Total</div>
-            <div id="total" style="font-weight:700;">₹0.00</div>
+      <section class=\"card\">
+        <h2>Your cart</h2>
+        <div class=\"body\">
+          <div id=\"items\" class=\"items\"></div>
+          <div id=\"emptyState\" class=\"empty\">No items yet. Scan a barcode in <strong>Cart</strong> mode or add manually.</div>
+          <div class=\"hr\"></div>
+          <div class=\"totals\">
+            <div class=\"label\">Subtotal</div>
+            <div id=\"subtotal\">₹0.00</div>
+            <div class=\"label\">Tax (0%)</div>
+            <div id=\"tax\">₹0.00</div>
+            <div class=\"label\" style=\"font-weight:700;\">Total</div>
+            <div id=\"total\" style=\"font-weight:700;\">₹0.00</div>
           </div>
-          <div style="display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.7rem;">
-            <button class="btn small" id="saveCartBtn">Save cart</button>
-            <button class="btn small" id="loadCartBtn">Load cart</button>
-            <button class="btn small warn" id="clearCartBtn">Clear cart</button>
-            <button class="btn small" id="exportBtn">Export JSON</button>
-            <input type="file" id="importFile" style="display:none;" />
-            <button class="btn small" id="importBtn">Import JSON</button>
+          <div style=\"display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.7rem;\">
+            <button class=\"btn small\" id=\"saveCartBtn\">Save cart</button>
+            <button class=\"btn small\" id=\"loadCartBtn\">Load cart</button>
+            <button class=\"btn small warn\" id=\"clearCartBtn\">Clear cart</button>
+            <button class=\"btn small\" id=\"exportBtn\">Export cart JSON</button>
+            <input type=\"file\" id=\"importFile\" style=\"display:none;\" />
+            <button class=\"btn small\" id=\"importBtn\">Import cart JSON</button>
           </div>
 
-          <div class="hr"></div>
+          <div class=\"hr\"></div>
           <h2>Checkout</h2>
-          <div class="body" style="padding-top:0;">
-            <div class="radio-row" id="payRow">
-              <label><input type="radio" name="pay" value="upi" checked /> UPI</label>
-              <label><input type="radio" name="pay" value="cash" /> Cash</label>
-              <label><input type="radio" name="pay" value="card" /> Card</label>
+          <div class=\"body\" style=\"padding-top:0;\">
+            <div class=\"radio-row\" id=\"payRow\">
+              <label><input type=\"radio\" name=\"pay\" value=\"upi\" checked /> UPI</label>
+              <label><input type=\"radio\" name=\"pay\" value=\"cash\" /> Cash</label>
+              <label><input type=\"radio\" name=\"pay\" value=\"card\" /> Card</label>
             </div>
-            <div id="upiFields" style="margin-top:.7rem;">
-              <div class="field">
+            <div id=\"upiFields\" style=\"margin-top:.7rem;\">
+              <div class=\"field\">
                 <label>
-                  <div class="label">Payee UPI ID (VPA)</div>
-                  <input id="upiVpa" class="input" placeholder="e.g., store@bank" />
+                  <div class=\"label\">Payee UPI ID (VPA)</div>
+                  <input id=\"upiVpa\" class=\"input\" placeholder=\"e.g., store@bank\" />
                 </label>
                 <label>
-                  <div class="label">Payee name</div>
-                  <input id="upiName" class="input" placeholder="e.g., My Store" />
+                  <div class=\"label\">Payee name</div>
+                  <input id=\"upiName\" class=\"input\" placeholder=\"e.g., My Store\" />
                 </label>
               </div>
-              <div class="field" style="margin-top:.5rem;">
+              <div class=\"field\" style=\"margin-top:.5rem;\">
                 <label>
-                  <div class="label">Note</div>
-                  <input id="upiNote" class="input" placeholder="Optional note (invoice #, etc.)" />
+                  <div class=\"label\">Note</div>
+                  <input id=\"upiNote\" class=\"input\" placeholder=\"Optional note (invoice #, etc.)\" />
                 </label>
               </div>
-              <div style="margin-top:.6rem; display:flex; gap:.5rem; flex-wrap:wrap;">
-                <button class="btn accent" id="upiPayBtn">Pay via UPI</button>
-                <a class="btn" id="upiLink" href="#" target="_blank" style="display:none;">Open UPI App</a>
+              <div style=\"margin-top:.6rem; display:flex; gap:.5rem; flex-wrap:wrap;\">
+                <button class=\"btn accent\" id=\"upiPayBtn\">Pay via UPI</button>
+                <a class=\"btn\" id=\"upiLink\" href=\"#\" target=\"_blank\" style=\"display:none;\">Open UPI App</a>
+                <button class=\"btn success\" id=\"recordSaleUpiBtn\" title=\"Record sale in inventory\">Record sale</button>
               </div>
-              <div style="color:var(--muted); font-size:.9rem; margin-top:.25rem;">This opens your UPI app with the total amount. Confirm payment in your app.</div>
+              <div style=\"color:var(--muted); font-size:.9rem; margin-top:.25rem;\">UPI link opens your UPI app with the total amount. Use <em>Record sale</em> to update inventory after payment.</div>
             </div>
-            <div id="cashFields" style="display:none; margin-top:.7rem;">
-              <div class="field">
+            <div id=\"cashFields\" style=\"display:none; margin-top:.7rem;\">
+              <div class=\"field\">
                 <label>
-                  <div class="label">Cash to collect</div>
-                  <input class="input" id="cashDue" readonly />
+                  <div class=\"label\">Cash to collect</div>
+                  <input class=\"input\" id=\"cashDue\" readonly />
                 </label>
               </div>
-              <button class="btn success" id="markPaidBtn">Mark paid (cash)</button>
+              <div style=\"display:flex; gap:.5rem; flex-wrap:wrap;\">
+                <button class=\"btn success\" id=\"markPaidBtn\">Mark paid (cash)</button>
+                <button class=\"btn success\" id=\"recordSaleCashBtn\" title=\"Record sale in inventory\">Record sale</button>
+              </div>
             </div>
-            <div id="cardFields" style="display:none; margin-top:.7rem; color:var(--muted);">
+            <div id=\"cardFields\" style=\"display:none; margin-top:.7rem; color:var(--muted);\">
               Use your card terminal to accept the payment. Record last 4 digits for reference.
+              <div style=\"margin-top:.6rem;\"><button class=\"btn success\" id=\"recordSaleCardBtn\">Record sale</button></div>
             </div>
 
-            <div class="hr"></div>
-            <div style="display:flex; gap:.5rem; flex-wrap:wrap;">
-              <button class="btn" id="printBtn">Print/Save receipt</button>
+            <div class=\"hr\"></div>
+            <div style=\"display:flex; gap:.5rem; flex-wrap:wrap;\">
+              <button class=\"btn\" id=\"printBtn\">Print/Save receipt</button>
             </div>
           </div>
         </div>
       </section>
     </div>
+
+    <!-- Inventory Management -->
+    <section class=\"card\" style=\"margin-top:1rem;\">
+      <h2>Inventory</h2>
+      <div class=\"body\">
+        <div class=\"inv-top\">
+          <input id=\"invSearch\" class=\"input\" placeholder=\"Search by name or code\" />
+          <button class=\"btn small\" id=\"invExportBtn\">Export inventory JSON</button>
+          <input type=\"file\" id=\"invImportFile\" style=\"display:none;\" />
+          <button class=\"btn small\" id=\"invImportBtn\">Import inventory JSON</button>
+          <button class=\"btn small warn\" id=\"invClearBtn\">Clear inventory</button>
+        </div>
+
+        <div class=\"inv-list\" id=\"invList\"></div>
+
+        <div class=\"hr\"></div>
+        <h2>Add / Edit item</h2>
+        <div class=\"body\" style=\"padding-top:0;\">
+          <div style=\"color:var(--muted); font-size:.9rem; margin-bottom:.4rem;\">Tip: switch scanner to <strong>Inventory</strong> mode and scan a barcode to auto-fill the code.</div>
+          <div class=\"field\">
+            <label>
+              <div class=\"label\">Barcode / Code</div>
+              <input id=\"invCode\" class=\"input\" placeholder=\"Scan or type code\" />
+            </label>
+            <label>
+              <div class=\"label\">Item name</div>
+              <input id=\"invName\" class=\"input\" placeholder=\"Name\" />
+            </label>
+            <label>
+              <div class=\"label\">Price (₹)</div>
+              <input id=\"invPrice\" class=\"input\" type=\"number\" min=\"0\" step=\"0.01\" placeholder=\"0\" />
+            </label>
+            <label>
+              <div class=\"label\">Stock (optional)</div>
+              <input id=\"invStock\" class=\"input\" type=\"number\" min=\"0\" step=\"1\" placeholder=\"0\" />
+            </label>
+          </div>
+          <div style=\"margin-top:.5rem; display:flex; gap:.5rem;\">
+            <button class=\"btn primary\" id=\"invSaveBtn\">Save item</button>
+            <button class=\"btn\" id=\"invClearFormBtn\">Clear form</button>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <div id="toast" class="toast"></div>
+  <div id=\"toast\" class=\"toast\"></div>
 
-  <!-- Quagga fallback (CDN). Will only be used if BarcodeDetector is unavailable. -->
-  <script src="https://unpkg.com/quagga@0.12.1/dist/quagga.min.js"></script>
-
+  <script src=\"https://unpkg.com/quagga@0.12.1/dist/quagga.min.js\"></script>
   <script>
     // ===== State =====
     const state = {
-      items: [], // {code, name, price, qty}
+      items: [], // cart items {code, name, price, qty}
+      inventory: [], // {code, name, price, stock}
       cameras: [],
       currentDeviceId: null,
       stream: null,
       detector: null,
-      rafId: null
+      rafId: null,
+      mode: 'cart' // 'cart' | 'inventory'
     };
 
-    // Demo mini catalog (optional lookup). Extend as needed.
-    const CATALOG = {
-      "8901234567890": { name: "Sample Chocolate 52g", price: 45 },
-      "012345678905": { name: "Sample Soda 500ml", price: 35 },
-    };
-
+    // Elements
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
@@ -272,6 +315,8 @@
     const stopBtn = document.getElementById('stopBtn');
     const torchBtn = document.getElementById('torchBtn');
     const switchCamBtn = document.getElementById('switchCamBtn');
+
+    const modeRadios = document.querySelectorAll('input[name="mode"]');
 
     const codeInput = document.getElementById('codeInput');
     const nameInput = document.getElementById('nameInput');
@@ -305,324 +350,259 @@
     const cashDue = document.getElementById('cashDue');
     const markPaidBtn = document.getElementById('markPaidBtn');
 
+    const recordSaleUpiBtn = document.getElementById('recordSaleUpiBtn');
+    const recordSaleCashBtn = document.getElementById('recordSaleCashBtn');
+    const recordSaleCardBtn = document.getElementById('recordSaleCardBtn');
+
     const printBtn = document.getElementById('printBtn');
 
     const toastEl = document.getElementById('toast');
 
+    // Inventory elements
+    const invSearch = document.getElementById('invSearch');
+    const invList = document.getElementById('invList');
+    const invExportBtn = document.getElementById('invExportBtn');
+    const invImportBtn = document.getElementById('invImportBtn');
+    const invImportFile = document.getElementById('invImportFile');
+    const invClearBtn = document.getElementById('invClearBtn');
+
+    const invCode = document.getElementById('invCode');
+    const invName = document.getElementById('invName');
+    const invPrice = document.getElementById('invPrice');
+    const invStock = document.getElementById('invStock');
+    const invSaveBtn = document.getElementById('invSaveBtn');
+    const invClearFormBtn = document.getElementById('invClearFormBtn');
+
     // ===== Utils =====
     const vibrate = (pattern=[30]) => { try { navigator.vibrate && navigator.vibrate(pattern); } catch {} };
     const fmt = v => `₹${Number(v).toFixed(2)}`;
-    const showToast = (msg) => {
-      toastEl.textContent = msg;
-      toastEl.classList.add('show');
-      setTimeout(() => toastEl.classList.remove('show'), 2000);
-    };
+    const showToast = (msg) => { toastEl.textContent = msg; toastEl.classList.add('show'); setTimeout(() => toastEl.classList.remove('show'), 2000); };
 
-    function renderItems() {
+    const invKey = 'smart-checkout-inventory';
+    const cartKey = 'smart-checkout-cart';
+
+    function persistCart() { try { localStorage.setItem(cartKey, JSON.stringify(state.items)); } catch {} }
+    function restoreCart() {
+      try { const raw = localStorage.getItem(cartKey); if (raw) state.items = JSON.parse(raw); } catch {}
+      renderCart(); recalcCart();
+    }
+
+    function persistInventory() { try { localStorage.setItem(invKey, JSON.stringify(state.inventory)); } catch {} }
+    function restoreInventory() { try { const raw = localStorage.getItem(invKey); if (raw) state.inventory = JSON.parse(raw); } catch {}; renderInventory(); }
+
+    function inventoryMap() { const map = {}; state.inventory.forEach(it => map[it.code] = it); return map; }
+
+    // ===== Cart rendering =====
+    function renderCart() {
       itemsEl.innerHTML = '';
-      if (!state.items.length) {
-        emptyState.style.display = 'block';
-        return;
-      }
+      if (!state.items.length) { emptyState.style.display = 'block'; return; }
       emptyState.style.display = 'none';
       state.items.forEach((item, idx) => {
-        const row = document.createElement('div');
-        row.className = 'item';
+        const row = document.createElement('div'); row.className = 'item';
         row.innerHTML = `
           <div>
             <div>${item.name || '—'}</div>
-            <div class="code">${item.code}</div>
+            <div class=\"code\">${item.code}</div>
           </div>
-          <div class="qty">
-            <button class="btn small" data-qty="-1" data-idx="${idx}">−</button>
+          <div class=\"qty\">
+            <button class=\"btn small\" data-qty=\"-1\" data-idx=\"${idx}\">−</button>
             <div>${item.qty}</div>
-            <button class="btn small" data-qty="1" data-idx="${idx}">+</button>
+            <button class=\"btn small\" data-qty=\"1\" data-idx=\"${idx}\">+</button>
           </div>
-          <div class="price">${fmt(item.price)}</div>
-          <button class="btn small danger" data-del="${idx}">Remove</button>
+          <div class=\"price\">${fmt(item.price)}</div>
+          <button class=\"btn small danger\" data-del=\"${idx}\">Remove</button>
         `;
         itemsEl.appendChild(row);
       });
-
-      itemsEl.querySelectorAll('[data-qty]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const idx = Number(btn.dataset.idx);
-          const delta = Number(btn.dataset.qty);
-          state.items[idx].qty = Math.max(1, state.items[idx].qty + delta);
-          persist();
-          recalc();
-          renderItems();
-        });
-      });
-      itemsEl.querySelectorAll('[data-del]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const idx = Number(btn.dataset.del);
-          state.items.splice(idx, 1);
-          persist();
-          recalc();
-          renderItems();
-        });
-      });
+      itemsEl.querySelectorAll('[data-qty]').forEach(btn => btn.addEventListener('click', () => {
+        const idx = Number(btn.dataset.idx); const delta = Number(btn.dataset.qty);
+        state.items[idx].qty = Math.max(1, state.items[idx].qty + delta);
+        persistCart(); recalcCart(); renderCart();
+      }));
+      itemsEl.querySelectorAll('[data-del]').forEach(btn => btn.addEventListener('click', () => {
+        const idx = Number(btn.dataset.del); state.items.splice(idx, 1);
+        persistCart(); recalcCart(); renderCart();
+      }));
     }
 
-    function recalc() {
+    function recalcCart() {
       const sub = state.items.reduce((s, it) => s + it.price * it.qty, 0);
-      const tax = 0; // adjust if needed
-      const total = sub + tax;
-      subtotalEl.textContent = fmt(sub);
-      taxEl.textContent = fmt(tax);
-      totalEl.textContent = fmt(total);
+      const tax = 0; const total = sub + tax;
+      subtotalEl.textContent = fmt(sub); taxEl.textContent = fmt(tax); totalEl.textContent = fmt(total);
       cashDue.value = fmt(total);
     }
 
-    function persist() {
-      try { localStorage.setItem('smart-checkout-cart', JSON.stringify(state.items)); } catch {}
-    }
-    function restore() {
-      try {
-        const raw = localStorage.getItem('smart-checkout-cart');
-        if (raw) { state.items = JSON.parse(raw); }
-      } catch {}
-      renderItems();
-      recalc();
-    }
-
-    // ===== Add Item =====
-    function addItem(code, name, price) {
+    // ===== Cart actions =====
+    function addItemToCart(code, name, price) {
       if (!code) return showToast('No code detected');
-      // If exists, bump qty
       const existing = state.items.find(it => it.code === code);
-      if (existing) {
-        existing.qty += 1;
-        vibrate([10, 40, 10]);
-        showToast('Quantity updated');
-      } else {
+      if (existing) { existing.qty += 1; vibrate([10,40,10]); showToast('Quantity updated'); }
+      else {
         let itemName = name, itemPrice = Number(price);
         if (!itemName || !itemPrice) {
-          const look = CATALOG[code];
-          if (look) {
-            itemName = itemName || look.name;
-            itemPrice = itemPrice || Number(look.price);
-          }
+          const inv = inventoryMap()[code];
+          if (inv) { itemName = itemName || inv.name; itemPrice = itemPrice || Number(inv.price); }
         }
-        if (!itemName) itemName = 'Item';
+        if (!itemName) { showToast('Unknown barcode. Add it to inventory.');
+          // pre-fill inventory form
+          invCode.value = code; invName.focus(); vibrate([30]); return; }
         if (!itemPrice) itemPrice = 0;
-        state.items.push({ code, name: itemName, price: itemPrice, qty: 1 });
-        vibrate([30]);
-        showToast('Item added');
+        state.items.push({ code, name: itemName, price: itemPrice, qty: 1 }); vibrate([30]); showToast('Item added');
       }
-      persist();
-      recalc();
-      renderItems();
+      persistCart(); recalcCart(); renderCart();
     }
 
-    addManualBtn.addEventListener('click', () => {
-      addItem(codeInput.value.trim(), nameInput.value.trim(), Number(priceInput.value))
+    addManualBtn.addEventListener('click', () => { addItemToCart(codeInput.value.trim(), nameInput.value.trim(), Number(priceInput.value)); });
+    clearInputsBtn.addEventListener('click', () => { codeInput.value=''; nameInput.value=''; priceInput.value=''; });
+
+    // ===== Inventory rendering =====
+    function renderInventory() {
+      const q = (invSearch.value || '').trim().toLowerCase();
+      invList.innerHTML = '';
+      const filtered = state.inventory.filter(it => !q || it.name.toLowerCase().includes(q) || it.code.toLowerCase().includes(q));
+      if (!filtered.length) {
+        const empty = document.createElement('div'); empty.className = 'empty'; empty.textContent = 'No inventory items.'; invList.appendChild(empty); return;
+      }
+      filtered.forEach((it, idx) => {
+        const row = document.createElement('div'); row.className = 'inv-item';
+        row.innerHTML = `
+          <div>
+            <div>${it.name}</div>
+            <div class=\"code\">${it.code}</div>
+          </div>
+          <div>${fmt(it.price)}</div>
+          <div>${Number(it.stock || 0)} pcs</div>
+          <div style=\"display:flex; gap:.4rem; justify-content:flex-end;\">
+            <button class=\"btn small\" data-edit=\"${idx}\">Edit</button>
+            <button class=\"btn small danger\" data-del=\"${idx}\">Remove</button>
+          </div>
+        `;
+        invList.appendChild(row);
+      });
+
+      invList.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', () => {
+        const idx = Number(btn.dataset.edit); const it = state.inventory[idx];
+        invCode.value = it.code; invName.value = it.name; invPrice.value = it.price; invStock.value = it.stock || 0; showToast('Loaded into form');
+      }));
+      invList.querySelectorAll('[data-del]').forEach(btn => btn.addEventListener('click', () => {
+        const idx = Number(btn.dataset.del); const it = state.inventory[idx];
+        state.inventory.splice(idx, 1); persistInventory(); renderInventory(); showToast(`Removed ${it.name}`);
+      }));
+    }
+
+    invSearch.addEventListener('input', renderInventory);
+
+    // Save / update inventory item
+    invSaveBtn.addEventListener('click', () => {
+      const code = (invCode.value || '').trim(); const name = (invName.value || '').trim(); const price = Number(invPrice.value || 0); const stock = Number(invStock.value || 0);
+      if (!code) return showToast('Enter a barcode'); if (!name) return showToast('Enter a name');
+      const idx = state.inventory.findIndex(it => it.code === code);
+      if (idx >= 0) { state.inventory[idx] = { code, name, price, stock }; showToast('Inventory updated'); }
+      else { state.inventory.push({ code, name, price, stock }); showToast('Item added to inventory'); }
+      persistInventory(); renderInventory();
     });
-    clearInputsBtn.addEventListener('click', () => {
-      codeInput.value = ''; nameInput.value = ''; priceInput.value = '';
+    invClearFormBtn.addEventListener('click', () => { invCode.value=''; invName.value=''; invPrice.value=''; invStock.value=''; });
+
+    invExportBtn.addEventListener('click', () => {
+      const data = JSON.stringify({ inventory: state.inventory }, null, 2);
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'smart-checkout-inventory.json'; a.click(); URL.revokeObjectURL(url);
     });
+    invImportBtn.addEventListener('click', () => invImportFile.click());
+    invImportFile.addEventListener('change', async () => {
+      const file = invImportFile.files[0]; if (!file) return; const text = await file.text();
+      try { const json = JSON.parse(text); state.inventory = json.inventory || []; persistInventory(); renderInventory(); showToast('Inventory imported'); }
+      catch { showToast('Invalid JSON'); }
+    });
+    invClearBtn.addEventListener('click', () => { state.inventory = []; persistInventory(); renderInventory(); showToast('Inventory cleared'); });
 
     // ===== Camera & Scanning =====
     async function enumerateCameras() {
-      try {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        state.cameras = devices.filter(d => d.kind === 'videoinput');
-        if (!state.currentDeviceId && state.cameras.length) {
-          // Prefer environment camera if label hints it
-          const env = state.cameras.find(d => /back|rear|environment/i.test(d.label));
-          state.currentDeviceId = (env || state.cameras[0]).deviceId;
-        }
-      } catch (e) { console.warn(e); }
+      try { const devices = await navigator.mediaDevices.enumerateDevices(); state.cameras = devices.filter(d => d.kind === 'videoinput'); if (!state.currentDeviceId && state.cameras.length) { const env = state.cameras.find(d => /back|rear|environment/i.test(d.label)); state.currentDeviceId = (env || state.cameras[0]).deviceId; } } catch (e) { console.warn(e); }
     }
 
     async function startScanner() {
       await enumerateCameras();
-      // Try BarcodeDetector first
-      if ('BarcodeDetector' in window) {
-        try {
-          state.detector = new BarcodeDetector({ formats: ['ean_13','ean_8','upc_a','upc_e','code_128','code_39','qr_code'] });
-        } catch (e) { console.warn('BarcodeDetector init failed', e); }
-      }
-
-      const constraints = {
-        video: state.currentDeviceId ? { deviceId: { exact: state.currentDeviceId } } : { facingMode: { ideal: 'environment' } },
-        audio: false
-      };
-      try {
-        state.stream = await navigator.mediaDevices.getUserMedia(constraints);
-        video.srcObject = state.stream;
-        await video.play();
-        canvas.width = video.videoWidth || 640;
-        canvas.height = video.videoHeight || 480;
-        scanLoop();
-        showToast('Scanner started');
-      } catch (e) {
-        console.error(e);
-        showToast('Camera access failed. Allow camera permission.');
-      }
+      if ('BarcodeDetector' in window) { try { state.detector = new BarcodeDetector({ formats: ['ean_13','ean_8','upc_a','upc_e','code_128','code_39','qr_code'] }); } catch (e) { console.warn('BarcodeDetector init failed', e); } }
+      const constraints = { video: state.currentDeviceId ? { deviceId: { exact: state.currentDeviceId } } : { facingMode: { ideal: 'environment' } }, audio: false };
+      try { state.stream = await navigator.mediaDevices.getUserMedia(constraints); video.srcObject = state.stream; await video.play(); canvas.width = video.videoWidth || 640; canvas.height = video.videoHeight || 480; scanLoop(); showToast('Scanner started'); }
+      catch (e) { console.error(e); showToast('Camera access failed. Allow camera permission.'); }
     }
 
-    function stopScanner() {
-      if (state.rafId) cancelAnimationFrame(state.rafId);
-      if (state.stream) {
-        state.stream.getTracks().forEach(t => t.stop());
-        state.stream = null;
-      }
-      showToast('Scanner stopped');
-    }
+    function stopScanner() { if (state.rafId) cancelAnimationFrame(state.rafId); if (state.stream) { state.stream.getTracks().forEach(t => t.stop()); state.stream = null; } showToast('Scanner stopped'); }
 
-    async function toggleTorch() {
-      try {
-        if (!state.stream) return showToast('Start scanner first');
-        const track = state.stream.getVideoTracks()[0];
-        const capabilities = track.getCapabilities && track.getCapabilities();
-        if (capabilities && capabilities.torch) {
-          const settings = track.getSettings();
-          const enable = !settings.torch;
-          await track.applyConstraints({ advanced: [{ torch: enable }] });
-          showToast(enable ? 'Torch on' : 'Torch off');
-        } else {
-          showToast('Torch not supported');
-        }
-      } catch (e) { showToast('Torch toggle failed'); }
-    }
+    async function toggleTorch() { try { if (!state.stream) return showToast('Start scanner first'); const track = state.stream.getVideoTracks()[0]; const capabilities = track.getCapabilities && track.getCapabilities(); if (capabilities && capabilities.torch) { const settings = track.getSettings(); const enable = !settings.torch; await track.applyConstraints({ advanced: [{ torch: enable }] }); showToast(enable ? 'Torch on' : 'Torch off'); } else { showToast('Torch not supported'); } } catch (e) { showToast('Torch toggle failed'); } }
 
-    async function switchCamera() {
-      if (!state.cameras.length) return showToast('No cameras found');
-      const idx = state.cameras.findIndex(d => d.deviceId === state.currentDeviceId);
-      const next = state.cameras[(idx + 1) % state.cameras.length];
-      state.currentDeviceId = next.deviceId;
-      stopScanner();
-      await startScanner();
-    }
+    async function switchCamera() { if (!state.cameras.length) return showToast('No cameras found'); const idx = state.cameras.findIndex(d => d.deviceId === state.currentDeviceId); const next = state.cameras[(idx + 1) % state.cameras.length]; state.currentDeviceId = next.deviceId; stopScanner(); await startScanner(); }
 
     function scanLoop() {
       const detectFrame = async () => {
         if (!video.videoWidth) { state.rafId = requestAnimationFrame(detectFrame); return; }
-        canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.width = video.videoWidth; canvas.height = video.videoHeight; ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         let code = null;
-        try {
-          if (state.detector) {
-            const barcodes = await state.detector.detect(canvas);
-            if (barcodes && barcodes.length) {
-              code = barcodes[0].rawValue;
-            }
-          }
-        } catch (e) {
-          // Detector may throw; fall back below
-        }
+        try { if (state.detector) { const barcodes = await state.detector.detect(canvas); if (barcodes && barcodes.length) { code = barcodes[0].rawValue; } } } catch (e) {}
 
         if (!code && window.Quagga) {
-          // Quagga live decode (simple single-frame approach)
           try {
-            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            // Quagga doesn't expose a simple single-frame decode in min build; 
-            // use onDetected from liveStream if needed. For brevity, start once.
             if (!Quagga.initialized) {
               Quagga.initialized = true;
-              Quagga.init({
-                inputStream: { name: 'Live', type: 'LiveStream', target: document.querySelector('#scanner'), constraints: { facingMode: 'environment' } },
-                decoder: { readers: ['ean_reader','code_128_reader','code_39_reader','upc_reader','upc_e_reader'] },
-              }, (err) => {
+              Quagga.init({ inputStream: { name: 'Live', type: 'LiveStream', target: document.querySelector('#scanner'), constraints: { facingMode: 'environment' } }, decoder: { readers: ['ean_reader','code_128_reader','code_39_reader','upc_reader','upc_e_reader'] } }, (err) => {
                 if (err) { console.error(err); return; }
                 Quagga.start();
-                Quagga.onDetected((data) => {
-                  const c = data.codeResult && data.codeResult.code;
-                  if (c) {
-                    addItem(c);
-                  }
-                });
+                Quagga.onDetected((data) => { const c = data.codeResult && data.codeResult.code; if (c) onScan(String(c)); });
               });
             }
           } catch (e) {}
         }
 
-        if (code) {
-          addItem(String(code));
-        }
+        if (code) { onScan(String(code)); }
         state.rafId = requestAnimationFrame(detectFrame);
-      };
-      state.rafId = requestAnimationFrame(detectFrame);
+      }; state.rafId = requestAnimationFrame(detectFrame);
     }
+
+    function onScan(code) {
+      if (state.mode === 'inventory') {
+        invCode.value = code; invName.focus(); vibrate([20]); showToast('Code captured for inventory');
+      } else { // cart
+        addItemToCart(code);
+      }
+    }
+
+    modeRadios.forEach(r => r.addEventListener('change', () => { state.mode = document.querySelector('input[name="mode"]:checked').value; showToast(`Mode: ${state.mode}`); }));
 
     // ===== Payment =====
-    function getTotals() {
-      const sub = state.items.reduce((s, it) => s + it.price * it.qty, 0);
-      const tax = 0; const total = sub + tax;
-      return { sub, tax, total };
-    }
+    function getTotals() { const sub = state.items.reduce((s, it) => s + it.price * it.qty, 0); const tax = 0; const total = sub + tax; return { sub, tax, total }; }
+    function buildUpiUrl() { const { total } = getTotals(); const params = new URLSearchParams({ pa: (upiVpa.value || '').trim(), pn: (upiName.value || '').trim() || 'Merchant', am: String(Number(total.toFixed(2))), cu: 'INR', tn: (upiNote.value || '').trim() || 'Smart Checkout' }); return `upi://pay?${params.toString()}`; }
+    upiPayBtn.addEventListener('click', () => { const url = buildUpiUrl(); if (!upiVpa.value) { showToast('Enter UPI ID'); return; } upiLink.href = url; upiLink.style.display = 'inline-flex'; upiLink.click(); showToast('Opening UPI app…'); });
 
-    function buildUpiUrl() {
-      const { total } = getTotals();
-      const params = new URLSearchParams({
-        pa: (upiVpa.value || '').trim(),
-        pn: (upiName.value || '').trim() || 'Merchant',
-        am: String(Number(total.toFixed(2))),
-        cu: 'INR',
-        tn: (upiNote.value || '').trim() || 'Smart Checkout'
-      });
-      return `upi://pay?${params.toString()}`;
-    }
+    payRow.querySelectorAll('input[name="pay"]').forEach(r => { r.addEventListener('change', () => { const val = payRow.querySelector('input[name="pay"]:checked').value; upiFields.style.display = (val === 'upi') ? 'block' : 'none'; cashFields.style.display = (val === 'cash') ? 'block' : 'none'; document.getElementById('cardFields').style.display = (val === 'card') ? 'block' : 'none'; }); });
 
-    upiPayBtn.addEventListener('click', () => {
-      const url = buildUpiUrl();
-      if (!upiVpa.value) { showToast('Enter UPI ID'); return; }
-      upiLink.href = url; upiLink.style.display = 'inline-flex';
-      upiLink.click();
-      showToast('Opening UPI app…');
-    });
-
-    payRow.querySelectorAll('input[name="pay"]').forEach(r => {
-      r.addEventListener('change', () => {
-        const val = payRow.querySelector('input[name="pay"]:checked').value;
-        upiFields.style.display = (val === 'upi') ? 'block' : 'none';
-        cashFields.style.display = (val === 'cash') ? 'block' : 'none';
-        document.getElementById('cardFields').style.display = (val === 'card') ? 'block' : 'none';
-      });
-    });
-
-    markPaidBtn.addEventListener('click', () => {
-      showToast('Cash collected. Thank you!');
-    });
+    markPaidBtn.addEventListener('click', () => { showToast('Cash collected. Thank you!'); });
 
     printBtn.addEventListener('click', () => window.print());
 
-    // ===== Persistence & Import/Export =====
-    saveCartBtn.addEventListener('click', () => { persist(); showToast('Cart saved'); });
-    loadCartBtn.addEventListener('click', () => { restore(); showToast('Cart loaded'); });
-    clearCartBtn.addEventListener('click', () => { state.items = []; persist(); renderItems(); recalc(); showToast('Cart cleared'); });
+    // Record sale (decrement stock)
+    function recordSale() {
+      const map = inventoryMap(); let changes = 0;
+      state.items.forEach(ci => { const inv = map[ci.code]; if (inv) { inv.stock = Math.max(0, Number(inv.stock || 0) - ci.qty); changes++; } });
+      // write back to array
+      state.inventory = Object.values(map); persistInventory(); renderInventory(); showToast(changes ? 'Sale recorded in inventory' : 'No matching inventory items');
+    }
+    recordSaleUpiBtn.addEventListener('click', recordSale);
+    recordSaleCashBtn.addEventListener('click', recordSale);
+    recordSaleCardBtn.addEventListener('click', recordSale);
 
-    exportBtn.addEventListener('click', () => {
-      const data = JSON.stringify({ items: state.items }, null, 2);
-      const blob = new Blob([data], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = 'smart-checkout-cart.json'; a.click();
-      URL.revokeObjectURL(url);
-    });
-
+    // ===== Persistence & Import/Export (Cart) =====
+    saveCartBtn.addEventListener('click', () => { persistCart(); showToast('Cart saved'); });
+    loadCartBtn.addEventListener('click', () => { restoreCart(); showToast('Cart loaded'); });
+    clearCartBtn.addEventListener('click', () => { state.items = []; persistCart(); renderCart(); recalcCart(); showToast('Cart cleared'); });
+    exportBtn.addEventListener('click', () => { const data = JSON.stringify({ items: state.items }, null, 2); const blob = new Blob([data], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'smart-checkout-cart.json'; a.click(); URL.revokeObjectURL(url); });
     importBtn.addEventListener('click', () => importFile.click());
-    importFile.addEventListener('change', async () => {
-      const file = importFile.files[0];
-      if (!file) return;
-      const text = await file.text();
-      try {
-        const json = JSON.parse(text);
-        state.items = json.items || [];
-        persist(); renderItems(); recalc(); showToast('Cart imported');
-      } catch { showToast('Invalid JSON'); }
-    });
-
-    // ===== Controls =====
-    startBtn.addEventListener('click', startScanner);
-    stopBtn.addEventListener('click', stopScanner);
-    torchBtn.addEventListener('click', toggleTorch);
-    switchCamBtn.addEventListener('click', switchCamera);
+    importFile.addEventListener('change', async () => { const file = importFile.files[0]; if (!file) return; const text = await file.text(); try { const json = JSON.parse(text); state.items = json.items || []; persistCart(); renderCart(); recalcCart(); showToast('Cart imported'); } catch { showToast('Invalid JSON'); } });
 
     // Init
-    restore();
+    restoreInventory(); restoreCart();
   </script>
 </body>
 </html>
